@@ -11,8 +11,34 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 
 
+
+
+function displayData(){
+  const url="https://datausa.io/api/data?drilldowns=State&measures=Population";
+  https.get(url, function(response){
+    console.log(response.statusCode);
+    response.on("data", function(data){
+      const populationData=JSON.parse(data);
+      // for displaying all the data
+      for(int i=0; i<populationData.length; i++){
+        const pop1= populationData.source[i].annotations.source_name
+        const pop2=populationData.source[i].annotations.source_description
+        const pop3=populationData.source[i].annotations.dataset_name
+        const pop4=populationData.source[i].annotations.dataset_link
+        const pop5=populationData.source[i].annotations.table_id
+        const pop6=populationData.source[i].annotations.topic
+        const pop7=populationData.source[i].annotations.subtopic
+        const tempVariable=document.getElementByTagName("p");
+        tempVariable.innerHTML=pop1+" "+pop2+" "+pop3+" "+pop4+" "+pop5+" "+pop6+" "+pop7;
+      }
+  });
+
+}
+
+
 //index page
 app.get("/", function(req,res){
+  displayData();
   res.sendFile(__dirname + "/index.html");
 });
 
